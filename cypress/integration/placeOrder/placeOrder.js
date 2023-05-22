@@ -66,6 +66,7 @@ And('Add customer details',()=>{
    cy.wait(500)
    cy.get('#name').type(name)
      .should('be.visible')
+     .should('to.have.length.of.at.least(6)')
      
    cy.wait(500)
    cy.get('#country').type('AU')
