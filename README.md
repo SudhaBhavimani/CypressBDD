@@ -1,7 +1,8 @@
 
 Task 1: API collection refere document: https://github.com/SudhaBhavimani/CypressBDD/blob/main/Bigtincan_api.postman_collection.json
 
-Task 2: Refer text document: https://github.com/SudhaBhavimani/CypressBDD/blob/main/BigtincanTask2.txt
+Task 2: 
+        Refer text document: https://github.com/SudhaBhavimani/CypressBDD/blob/main/BigtincanTask2.txt
 
         Refer executable framework :https://github.com/SudhaBhavimani/CypressBDD/
         
