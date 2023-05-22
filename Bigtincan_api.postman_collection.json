@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "e1041382-fb8c-4948-b8ca-b06b6652d6d7",
+		"name": "Bigtincan_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18099748"
+	},
+	"item": [
+		{
+			"name": "Get_Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",() => {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							"pm.test(\"Response body is correct\", () =>{",
+							" pm.expect(jsonData.total).to.be.an(\"number\");",
+							" pm.expect(jsonData).to.be.an(\"object\");",
+							"});",
+							" ",
+							" ",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"All products information\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/javascript",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/products/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Single_Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" ",
+							"pm.test(\"Status code is 200\",() => {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							"pm.test(\"Response body is returning correct product\", () =>{",
+							"pm.expect(jsonData.id).to.be.eql(1);",
+							"pm.expect(jsonData.id).to.be.an(\"number\");",
+							"});",
+							" ",
+							"//JSON Schema validation ",
+							"",
+							"var Schema=",
+							"    {",
+							"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"id\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"title\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"description\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"price\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"discountPercentage\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"rating\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"stock\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"brand\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"category\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"thumbnail\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"images\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": [",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        {",
+							"          \"type\": \"string\"",
+							"        }",
+							"      ]",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"id\",",
+							"    \"title\",",
+							"    \"description\",",
+							"    \"price\",",
+							"    \"discountPercentage\",",
+							"    \"rating\",",
+							"    \"stock\",",
+							"    \"brand\",",
+							"    \"category\",",
+							"    \"thumbnail\",",
+							"    \"images\"",
+							"  ]",
+							"}",
+							"",
+							"pm.test(\"Schema is valid\", function(){",
+							"    pm.expect(tv4.validate(jsonData, Schema)).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"console.log(\"Searching product with id 1\");",
+							"pm.variables.set(\"productId\",1);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/products/{{productId}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_SearchProduct",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"console.log(\"Searching products with specific productWithBrand\")",
+							"pm.variables.set(\"productWithBrand\",\"Samsung\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",() => {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							" ",
+							"pm.test(\"Response body is returning correct product\", () =>{",
+							"pm.expect(jsonData.brand).to.be.not.null;",
+							"pm.expect(jsonData.products[1].brand).is.eql(\"Samsung\");",
+							"});",
+							" ",
+							" ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/products/search?q={{productWithBrand}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{productWithBrand}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_SearchWithCategory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",() => {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							" ",
+							"pm.test(\"Response body is returning correct product\", () =>{",
+							"pm.expect(jsonData.category).to.be.not.null;",
+							"pm.expect(jsonData.products[2].category).is.eql(\"laptops\");",
+							"});",
+							" ",
+							" ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"Searching products with specific category\")",
+							"pm.variables.set(\"productWithCategory\",\"Laptop\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/products/search?q={{productWithCategory}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{productWithCategory}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 201\",() => {",
+							"pm.response.to.have.status(201);",
+							" ",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							" ",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							" ",
+							"pm.test(\"Response body is returning newly added product\", () =>{",
+							"pm.expect(jsonData.title).is.eql(\"Test product\");",
+							"pm.expect(jsonData.id).to.be.eql(101); ",
+							"});",
+							" ",
+							" ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Test product\",\n  \"description\": \"Simple produc\",\n  \"price\": 50,\n  \"discountPercentage\": 12.96,\n  \"rating\": 4.69,\n  \"stock\": 94,\n  \"brand\": \"OPPO\",\n  \"category\": \"smartphones\",\n  \"thumbnail\": \"https://i.dummyjson.com/data/products/1/thumbnail.jpg\",\n  \"images\": [\n    \"https://i.dummyjson.com/data/products/1/1.jpg\",\n    \"https://i.dummyjson.com/data/products/1/2.jpg\",\n    \"https://i.dummyjson.com/data/products/1/3.jpg\",\n    \"https://i.dummyjson.com/data/products/1/4.jpg\",\n    \"https://i.dummyjson.com/data/products/1/thumbnail.jpg\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/products/add",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 201\",() => {",
+							"pm.response.to.have.status(200);",
+							" ",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							" ",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							" ",
+							"pm.test(\"Response body is returning updated product\", () =>{",
+							"pm.expect(jsonData.price).to.be.eql(500);",
+							"pm.expect(jsonData.description).is.eql(\"Updated product description\"); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(\"Updating product description and price & validating change\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \n  \"title\": \"iPhone 14\",\n  \"description\": \"Updated product description\",\n  \"price\": 500,\n  \"discountPercentage\": 12.96,\n  \"rating\": 4.69,\n  \"stock\": 94,\n  \"brand\": \"OPPO\",\n  \"category\": \"smartphones\",\n  \"thumbnail\": \"https://i.dummyjson.com/data/products/1/thumbnail.jpg\",\n  \"images\": [\n    \"https://i.dummyjson.com/data/products/1/1.jpg\",\n    \"https://i.dummyjson.com/data/products/1/2.jpg\",\n    \"https://i.dummyjson.com/data/products/1/3.jpg\",\n    \"https://i.dummyjson.com/data/products/1/4.jpg\",\n    \"https://i.dummyjson.com/data/products/1/thumbnail.jpg\"\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dummyjson.com/products/1",
+					"protocol": "https",
+					"host": [
+						"dummyjson",
+						"com"
+					],
+					"path": [
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleting existing product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 204\",() => {",
+							"pm.response.to.have.status(204);",
+							" ",
+							"});",
+							"",
+							"pm.test(\"Content-type is application/json\", () =>{",
+							"pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8'); ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\",() => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(210);",
+							"});",
+							"",
+							" ",
+							"",
+							"// Validating expected product is fetched in response body",
+							"",
+							"const jsonData = pm.response.json();",
+							" ",
+							"pm.test(\"Response body is returning deleted product details\", () =>{",
+							"pm.expect(jsonData.id).to.be.eql(1);",
+							"pm.expect(jsonData.isDeleted).is.true; ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							" "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/products/{{productId}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "productId",
+			"value": "1"
+		},
+		{
+			"key": "productWithBrand",
+			"value": "Samsung"
+		},
+		{
+			"key": "productWithCategory",
+			"value": "Laptop"
+		}
+	]
+}

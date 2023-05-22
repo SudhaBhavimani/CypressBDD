@@ -1,0 +1,258 @@
+Login page Testing 
+
+Feature: Login feature
+
+Background: Common steps
+Given Visit url
+
+Scenario: Success login
+ 
+When Enter user name "testconsumer101"
+And Enter password "Abc1234"
+Then Click on login 
+ 
+Scenario: Nagative case - Unsuccess login 
+When Enter user name "testconsumer101"
+And Enter password "wrong password"
+Then Click on login 
+Then User gets pop up message
+-----------------------------------------------------------------------------------------------------------
+Action methods :
+
+class loginPage{
+
+
+    elements = {
+        txtUser:() => cy.get('#loginusername'),
+        txtPsw:() => cy.get('#loginpassword'),
+        clickBtn:() => cy.get('#logInModal > .modal-dialog > .modal-content > .modal-footer > .btn-primary')
+    }
+
+    setUserName(username){
+
+        this.elements.txtUser().type(username);
+        
+    }
+
+    setPassword(password){
+        this.elements.txtPsw().type(password);
+    }
+
+    clickLogin(){
+        this.elements.clickBtn().click();
+    }
+
+    
+    
+}
+
+module.exports = new loginPage();
+----------------------------------------------------------------------------------------------------------------
+
+Step definations : 
+
+import { expect } from "chai";
+import {Given , Then , And , When } from "cypress-cucumber-preprocessor/steps";
+const loginPage = require('../../pages/loginPage')
+
+
+Given('Visit url', ()=>{
+    cy.visit('https://demoblaze.com/index.html') 
+})
+
+When('Enter user name {string}',(username)=>{
+    cy.get('#login2').click()
+    cy.wait(500)
+     
+    loginPage.setUserName(username)
+    cy.wait(500)
+})
+
+And('Enter password {string}',(password)=>{
+    loginPage.setPassword(password)
+    cy.wait(500)
+})
+
+Then('Click on login',()=>{
+    loginPage.clickLogin()
+    cy.url().should('contains', '/index.html')
+
+})
+
+Then('User gets pop up message',()=>{
+
+    cy.on('window:alert',(text)=>{
+        expect(text).to.contains('Wrong password.')
+    })
+})
+
+=========================================================================================
+
+Add item to cart and Place order feature 
+
+Feature: Add item to cart feature
+
+Background: Common steps 
+Given Visit url
+When Enter user name "testconsumer101"
+And Enter password "Abc1234"
+Then Click on login
+
+Scenario: Add 1 item to cart
+When Select product 
+Then Click on Add to cart button
+Then User get pop up message "Product added."
+
+Scenario: Place order
+When Select product 
+Then Click on Add to cart button
+Then User get pop up message "Product added."
+Then Click on cart
+Then Click on place order button
+And Add customer details 
+Then Click on Purchase
+-----------------------------
+
+Action methodes :
+
+class placeOrderPage{
+    elements = {
+        selProd:() => cy.contains('Nexus 6'),
+        addCartBtn:() => cy.contains('Add to cart'),
+        cartBtn:() => cy.contains('Cart'),
+        placeOrderBtn:() => cy.contains('Place Order'),
+        clickOnPurchase:() => cy.contains('Purchase')
+         
+    }
+
+    selectProduct()
+    {
+        cy.wait(500)
+      this.elements.selProd().click();
+    }
+
+    addProductToCart()
+    {
+        this.elements.addCartBtn().click();
+    }
+     
+    clickOnCartBtn()
+    {
+        this.elements.cartBtn().click();
+    }
+
+    clickOnPlaceOrder()
+    {
+        this.elements.placeOrderBtn().click();
+    }
+
+    purchase()
+    {
+        this.elements.clickOnPurchase().click()
+    }
+        
+    }
+
+module.exports = new placeOrderPage();
+
+--------------------------------------------------------------------
+Step defination :
+
+import { expect } from "chai";
+import {Given , Then , And , When } from "cypress-cucumber-preprocessor/steps";
+const loginPage = require('../../pages/loginPage')
+const placeOrderPage = require('../../pages/placeOrderPage')
+
+var yearValue = 2023;
+var monthValue = 'May'
+const cardValue = '4111111111111111'
+var name = 'Sudharani'
+var ConfirMsg ='Thank you for your purchase!'
+
+Given('Visit url', ()=>{
+    cy.visit('https://demoblaze.com/index.html') 
+})
+
+When('Enter user name {string}',(username)=>{
+    cy.get('#login2').click()
+    cy.wait(500)
+     
+    loginPage.setUserName(username)
+    cy.wait(500)
+})
+
+And('Enter password {string}',(password)=>{
+    loginPage.setPassword(password)
+    cy.wait(500)
+})
+
+Then('Click on login',()=>{
+    loginPage.clickLogin()
+    //cy.get('#logInModal > .modal-dialog > .modal-content > .modal-footer > .btn-primary').click({force: true})
+    cy.url().should('contains', '/index.html')
+
+})
+
+When('Select product',()=>{
+    cy.wait(500)
+    placeOrderPage.selectProduct()
+
+})
+
+Then('Click on Add to cart button',()=>{
+    cy.wait(500)
+    placeOrderPage.addProductToCart()
+})
+
+Then('User get pop up message {string}', (msg)=>{
+    cy.on('window:alert',(text)=>{
+        expect(text).to.contains(msg)
+    })
+})
+
+Then('Click on cart',()=>{
+    cy.wait(500)
+   placeOrderPage.clickOnCartBtn()
+})
+
+Then('Click on place order button',() => {
+    cy.wait(500)
+   placeOrderPage.clickOnPlaceOrder()
+
+})
+
+And('Add customer details',()=>{
+    
+   cy.wait(500)
+   cy.get('#name').type(name)
+     .should('be.visible')
+	 .should('to.have.length.of.at.least(6)')
+	 
+     
+   cy.wait(500)
+   cy.get('#country').type('AU')
+     .should('be.visible')
+   
+   cy.get('#city').type('Sydney')
+    .should('be.visible')
+   
+   cy.wait(500)
+   cy.get('#card').type(cardValue)
+     .should('have.value',cardValue.substring(0,16))
+       
+   cy.get('#month').type(monthValue)
+     .should('be.visible')
+   
+   cy.wait(500)
+   cy.get('#year').type(yearValue)
+   cy.wait(500)
+   cy.wrap(yearValue).should('be.greaterThan',2022)    
+
+})
+
+Then('Click on Purchase',()=>{
+placeOrderPage.purchase()
+cy.get('.sweet-alert > h2').should('contain',ConfirMsg)
+cy.get('.confirm').click()     
+})
+	
